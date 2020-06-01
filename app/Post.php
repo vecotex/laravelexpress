@@ -15,15 +15,13 @@ class Post extends Model
     {
         return $this->hasMany('App\Comment');
     }
-
-    public function tags()
+        public function tags()
     {
-        //return $this->belongsToMany('App\Tag', 'posts_tags');
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany('App\Tag', 'posts_tags');        
     }
     public function getTagListAttribute()
     {
-        $tags = $this->tags()->lists('name')->all();
+        $tags = $this->tags()->pluck('name')->all(); //pluck lista os nomes das tags
         return implode(', ', $tags);
     }
 }

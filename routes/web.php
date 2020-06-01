@@ -14,8 +14,32 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'PostsAdminController@index');
+
+Route::get('/auth', function()
+{
+    //$user = App\User::find(1);
+    //Auth::login($user);
+
+    if(Auth::attempt(['email' => 'vicotex@gmail.com', 'password' => 94741301]))
+    {
+        return "Logado";
+    }
+        return 'Não logou';
+   /* if(Auth::check())
+    {
+        return "Logado";
+    }
+    */
+});
+Route::get('auth/logout', function()
+{
+    Auth::logout();
+}
+);
+
+
 //Agrupando rotas
-Route::group(['prefix' => 'admin'], function () {
+Route::group(['prefix' => 'admin', 'middleware'=>'auth'], function () {
     Route::group(['prefix' => 'posts'], function () {
         Route::get('', ['as' => 'admin.posts.index', 'uses' => 'PostsAdminController@index']);
         Route::get('create', ['as' => 'admin.posts.create', 'uses' => 'PostsAdminController@create']);
@@ -31,3 +55,7 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
